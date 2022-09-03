@@ -1,7 +1,7 @@
 #Assembler_Simulator
 
 This repository holds the project for Computer Architecture course. This project is a code to understand the working of memory of a 
-assembly code in a CISC Architecture model of machine. Opcode for various instructions were given and we had to plot graphs for the memory locations
+assembly code in a RISC Architecture model of machine. Opcode for various instructions were given and we had to plot graphs for the memory locations
 after every instruction.
 
 The Project is divided into 2 parts Assembler and Simulotor
