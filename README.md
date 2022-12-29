@@ -127,6 +127,6 @@ simulator input.bin
 00000000 0000000000000011 0000000000000010 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 </br>
 The first line of output shows the initial state of the program counter (PC) and registers. The second line shows the state after the first instruction (add) is executed. The program is then halted, and the memory dump is not shown.
 
-	 </br>
+
 	
 🪢 This was developed with ❤️ by Shubham Attri 
