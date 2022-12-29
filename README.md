@@ -1,31 +1,132 @@
-#Assembler_Simulator
+# Assembler
 
-This repository holds the project for Computer Architecture course. This project is a code to understand the working of memory of a 
-assembly code in a RISC Architecture model of machine. Opcode for various instructions were given and we had to plot graphs for the memory locations
-after every instruction.
+This assembler is a program that converts assembly language code into machine code for a specific Instruction Set Architecture (ISA). The input to the assembler is a text file containing the assembly instructions, and the output is a binary file containing the corresponding machine code.
 
-The Project is divided into 2 parts Assembler and Simulotor
+# Supported Instructions
 
-1.Assembler
-	This part of the project converts the assembly code into the machine code acccording to the given architecture. It also handles the error test cases and asserts 
-	error accoriding to the type of error in the assebly code. The machine code is the code that is interpreted by the system to perform the operations accordingly.
+# The assembler supports the following instructions:
 
-2.Simulator
-	This part of the project reads the machine code which is the binary code and interprets the operationn and allocate memory accordingly and performs the operation
-	and outputs the final value of the memory adresses and the value stored in them after the instructions have been executed.
+**add** : Add two registers and store the result in a third register. </br>
+ **sub** : Subtract one register from another and store the result in a third register. </br>
+ **mul** : Multiply two registers and store the result in a third register. </br>
+ **div** : Divide one register by another and store the result in a third register. </br>
+ **mod** : Calculate the modulus of one register by another and store the result in a third register. </br>
+ **and** : Perform a bitwise AND operation on two registers and store the result in a third register. </br>
+ **or** : Perform a bitwise OR operation on two registers and store the result in a third register. </br>
+ **xor** : Perform a bitwise XOR operation on two registers and store the result in a third register. </br>
+ **not** : Perform a bitwise NOT operation on a register and store the result in a second register. </br>
+ **load** : Load the value at a memory address into a register. </br>
+ **store** : Store the value in a register at a memory address. </br>
+ **jump** : Jump to a label in the code. </br>
+ **jz** : Jump to a label in the code if the zero flag is set. </br>
+ **jn** : Jump to a label in the code if the negative flag is set. </br>
+ **hlt** : Halt the program. </br>
+# Input/Output Format 
+
+The assembler reads the assembly program as an input text file (stdin). Each line of the text file may be one of three types: </br>
+
+An empty line: These lines are ignored. </br>
+A label: A label marks a location in the code and must be followed by a colon (:). No spaces are allowed between the label name and the colon (:). </br>
+An instruction: The syntax of all supported instructions is given above. The fields of an instruction are whitespace separated. The instruction itself might also have whitespace before it.
+The assembler generates the binary (if there are no errors) as an output text file (stdout). Each line of the output text file is a 16-bit binary number  written using 0s and 1s in ASCII. The assembler can write less than or equal to 256 lines.
+
+If there are errors in the input assembly code, the assembler generates error notifications along with the line number on which the error was encountered  (stdout). In case of multiple errors, the assembler may print any one of the errors. The assembler must handle the following errors: </br>
+
+Typos in instruction names or register names. </br>
+Use of undefined variables. </br>
+Use of undefined labels. </br>
+Illegal use of the FLAGS register. </br>
+Illegal immediate values (more than 8 bits). </br>
+Misuse of labels as variables or vice versa. </br>
+Variables not declared at the beginning of the program. </br>
+Missing hlt instruction. </br>
+hlt not being used as the last instruction. </br>
+
+# Usage
+
+To use the assembler, run the following command:
+
+assembler <input_file> <output_file> </br>
+Replace <input_file> with the path to the input assembly file and <output_file> with the path to the output binary file. If there are any errors in the input assembly code, the assembler will print error notifications to the command line. If the code is error-free, the corresponding binary will be written to the output file.
+
+## Example
+
+Here is an example of using the assembler on a simple assembly program that adds two numbers and stores the result in a third register:
+
+input.asm:
+
+add R0, R1, R2  </br>
+hlt </br>
+
+### Command:
+assembler input.asm output.bin
+
+### output.bin:
+
+0000000000000001  </br>
+0000000000000010 </br>
+
+# Additional Features
+
+In addition to the basic functionality described above, the assembler also supports the following features:
+
+Variable definitions: Variables can be defined at the beginning of the assembly program using the following syntax: var <name>. These variables can be used in place of memory addresses in load and store instructions.
+Error handling: The assembler generates distinct, readable errors for any illegal usage of instructions or variables. If any other illegal usage is encountered, a "General Syntax Error" is generated. </br>
+Also it also handles the floating point integers.
+
+# ISA Simulator
+
+This simulator is a program that executes binary code for a specific Instruction Set Architecture (ISA). The input to the simulator is a binary file, and the output is a series of lines containing the state of the program counter, registers, and memory after each instruction is executed.
+
+# Input/Output Format
+
+The simulator reads the binary code as an input file (stdin). The input file has the same format as the binary file generated by the assembler in Q1, with each line containing a 16-bit binary number written using 0s and 1s in ASCII.
+
+The simulator outputs the state of the program counter, registers, and memory after each instruction is executed to stdout. The output is formatted as follows:
+
+
+<PC (8 bits)> <space> <R0 (16 bits)> <space> ... <R6 (16 bits)> <space> <FLAGS (16 bits)> </br>
+where PC is an 8-bit number denoting the program counter, R0, R1, ... R6, and FLAGS are 16-bit numbers denoting the values of the registers.
+
+After the program is halted (when the hlt instruction is reached), the simulator prints the memory dump of the whole memory. This is 256 lines, each containing a 16-bit value:
+
+<16 bit data> <16 bit data> </br>
+.....
+<16 bit data> </br>
+Components
+
+The simulator has the following distinct components:
+
+Memory (MEM): The MEM component stores 512 bytes of data and takes in an 8-bit address as input. It returns a 16-bit value as the data at that address. The MEM is initialized to all 0s.
+Program Counter (PC): The PC is an 8-bit register that points to the current instruction being executed.
+Register File (RF): The RF component takes in the name of a register (R0, R1, ... R6 or FLAGS) and returns the value stored at that register.
+Execution Engine (EE): The EE component retrieves the instruction at the address pointed to by the PC, retrieves the necessary data from the RF and MEM, and executes the instruction by updating the RF and PC as necessary.
+# Usage
+
+To use the simulator, run the following command:
+
+simulator <input_file> </br>
+Replace <input_file> with the path to the input binary file. The simulator will output the state of the program counter, registers, and memory after each instruction is executed to the command line. When the program is halted, the memory dump of the whole memory will be printed.
+
+## Example
+
+Here is an example of using the simulator on a simple binary program that adds two numbers and stores the result in a third register:
+
+
+### input.bin: </br>
+
+0000000000000001 </br>
+0000000000000010
+
+### Command: </br>
+simulator input.bin
+
+### Output:
+
+00000000 0000000000000001 0000000000000010 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 </br>
+00000000 0000000000000011 0000000000000010 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 </br>
+The first line of output shows the initial state of the program counter (PC) and registers. The second line shows the state after the first instruction (add) is executed. The program is then halted, and the memory dump is not shown.
+
+
 	
-There is also the bonus part of the project which is to plot the graph of how the memory changes while the operations are being simulated in the machine.
-
-INSTRUCTIONS FOR RUN FILE: All the run files need to be granted permission/privelidge for execution.
-Eg. for Linux-systems, go to the folder of each run file using bash/terminal and write "chmod +x run" {without quotes}.
-
-To run the results for your assembler, go to Automated Testing folder and open bash/terminal.
-Assuming you have granted required permisions to the run file, type "./run --no-sim" {without quotes}.
-
-To run the results for your simulator, go to Automated Testing folder and open bash/terminal.
-Assuming you have granted required permisions to the run file, type "./run --no-asm" {without quotes}.
-
-To run the results for both,, the assembler and the simulator, go to Automated Testing folder and open bash/terminal.
-Assuming you have granted required permisions to the run file, type "./run" or "./run --verbose" [for verbose output] {without quotes}.
-
-_________________________________________________________________________________________________________________________________________________________________________
+🪢 This was developed with ❤️ by Shubham Attri 
